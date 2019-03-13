@@ -1,0 +1,4 @@
+node_modules
+.vscode
+not_necessary
+logs/*

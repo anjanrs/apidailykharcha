@@ -1,0 +1,10 @@
+2) Only getUserAccess info for the save user or if its a admin
+
+
+1) Make JWT cookie based currently its http header based
+2) Comment the modules properly
+3) Write proper test cases
+4) implement proper cors
+5) implement documentation tool
+6) Try to make the value and values in filter single field, currently checkbox uses values 
+and select and textbox uses value to change the state
