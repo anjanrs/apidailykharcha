@@ -2,6 +2,7 @@ const AuthController = require("../controllers/authController");
 
 module.exports = (appMain, authMiddleware) => {
   // appMain.app.get("/", requireAuth, (req, res) => {
+  const authController = AuthController(appMain);
   appMain.app.get("/", (req, res) => {
     return res.send({ hi: "there" });
   });
@@ -10,13 +11,17 @@ module.exports = (appMain, authMiddleware) => {
     "/signin",
     authMiddleware.requireSignin,
     (req, res, next) => {
-      const authController = AuthController(appMain);
+      // const authController = AuthController(appMain);
       authController.signin(req, res, next);
     }
   );
 
   appMain.app.post("/signup", (req, res, next) => {
-    const authController = AuthController(appMain);
+    // const authController = AuthController(appMain);
     authController.signup(req, res, next);
+  });
+  appMain.app.post("/signout", (req, res, next) => {
+    // const authController = AuthController(appMain);
+    authController.signout(req, res, next);
   });
 };

@@ -8,9 +8,29 @@ module.exports = appMain => {
       // We just need to give them a token
       // user object is attached to req from passwport
       const token = await userModel.createJWTToken(req.user);
+      // Send Set-Cookie header
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        // sameSite: true,
+        // signed: true,
+        // secure: true
+        secure: false 
+      });
       return res.send({
         success: true,
         token
+      });
+    },
+    signout: async (req, res, next) => {
+      res.cookie('jwt', '', {
+        httpOnly: true,
+        // sameSite: true,
+        // signed: true,
+        // secure: true
+        secure: false 
+      });
+      return res.send({
+        success: true,
       });
     },
     //signup new user if email is not already created
@@ -32,9 +52,15 @@ module.exports = appMain => {
         } else {
           const result = await userModel.createNewuser(email, password);
           const token = await userModel.createJWTToken(result);
+          res.cookie('jwt', token, {
+            httpOnly: true,
+            // sameSite: true,
+            // signed: true,
+            // secure: true
+          });
           return res.send({
             success: true,
-            token
+            // token
           });
         }
       } catch (error) {

@@ -17,8 +17,8 @@ exports.setupJwtLogin = appMain => {
   };
 
   const jwtOptions = {
-    jwtFromRequest: ExtractJwt.fromHeader("authorization"),
-    // jwtFromRequest: extractJwtFromCookie,
+    // jwtFromRequest: ExtractJwt.fromHeader("authorization"),
+    jwtFromRequest: extractJwtFromCookie,
     secretOrKey: config.jwtSecret
   };
 
