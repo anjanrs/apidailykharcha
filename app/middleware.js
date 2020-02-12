@@ -10,6 +10,7 @@ const expressGraphQL = require("express-graphql");
 const graphQLSchema = require("../schema/schema");
 
 module.exports = function() {
+
   //logs all request to console
   //Standard Apache combined log output.
   const accessLogService = new AccessLogService();
@@ -26,7 +27,8 @@ module.exports = function() {
       }
     },
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS",
-    credentials: true
+    credentials: true,
+    exposedHeaders:['Content-Range', 'X-Content-Range', 'authenticity_token']
   }
   // this.app.options('*', cors(corsOptions));
   this.app.use(cors(corsOptions));
@@ -37,6 +39,13 @@ module.exports = function() {
 
   //parse cookie
   this.app.use(cookieParser());
+
+  //check for csfr token validity 
+  // this.app.use( (req, res, next) => {
+  //     console.log(req.header['authenticity_token']);
+  //     console.log(req.cookie('jwt'));
+  //     next();
+  //   });
 
   const schema = graphQLSchema(this);
   this.app.use(

@@ -26,7 +26,6 @@ exports.setupJwtLogin = appMain => {
   const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
     //See if the user Id in the payload exists in our database
     const user = await userModel.getUserById(payload.sub);
-
     //If it does, call 'done' wht that other
     if (user) {
       done(null, user);
