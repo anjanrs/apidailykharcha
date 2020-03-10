@@ -3,11 +3,14 @@ const bodyParser = require("body-parser");
 //check https://github.com/expressjs/morgan for documentation
 const morgan = require("morgan");
 const cors = require("cors");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const jwt = require("jwt-simple");
 
+const config = require("../config");
 const AccessLogService = require("../services/accessLogService");
 const expressGraphQL = require("express-graphql");
 const graphQLSchema = require("../schema/schema");
+
 
 module.exports = function() {
 
@@ -17,7 +20,7 @@ module.exports = function() {
   accessLogService.init();
 
   //handle cors
-  var whitelist = ['http://localhost:3000']
+  var whitelist = ['http://localhost:3000'];
   var corsOptions = {
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
@@ -41,11 +44,26 @@ module.exports = function() {
   this.app.use(cookieParser());
 
   //check for csfr token validity 
-  // this.app.use( (req, res, next) => {
-  //     console.log(req.header['authenticity_token']);
-  //     console.log(req.cookie('jwt'));
-  //     next();
-  //   });
+  this.app.use( (req, res, next) => {
+    // console.log(req.headers);
+    if(!!req.cookies['jwt']) {
+      const headeCSFR = req.header('authenticity_token');
+      const jsonJWT = jwt.decode(req.cookies['jwt'], config.jwtSecret);
+      const jwtCSFR = jsonJWT.authenticity_token;
+      if(headeCSFR == jwtCSFR) {
+        console.log('csfr token valid');
+        
+      } else {
+        console.log('csfr token invalid');
+        return res.status(401).send({
+          error: "CSFR Invalid",
+          success: false
+        });
+      }
+    }
+    next();
+
+  });
 
   const schema = graphQLSchema(this);
   this.app.use(

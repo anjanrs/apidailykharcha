@@ -33,6 +33,7 @@ exports.setupJwtLogin = appMain => {
       //otherwise call done without a user object
       done(null, false);
     }
+    
   });
 
   //Tell passport to use this strategy
@@ -56,7 +57,7 @@ exports.setupLocalLogin = function(appMain) {
 
       const isMatch = await userModel.comparePassword(password, user.password);
       if (!isMatch) {
-        return done(null, false);
+        return done(null, false,  { message: 'Incorrect crediantial.' });
       }
       return done(null, user);
     }

@@ -15,7 +15,8 @@ class UserModel extends Model {
     return jwt.encode(
       {
         sub: user.id,
-        iat: timestamp
+        iat: timestamp,
+        authenticity_token: user.authenticity_token
       },
       config.jwtSecret
     );
